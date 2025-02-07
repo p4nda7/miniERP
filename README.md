@@ -1,21 +1,5 @@
 # miniERP - Kundenmanagement und Statistiken
 
-## 📋 Inhaltsverzeichnis
-
-- [Einführung](#einführung)
-- [Systemanforderungen](#systemanforderungen)
-- [Installation](#installation)
-- [Verwendung](#verwendung)
-- [Architektur](#architektur)
-- [Funktionen](#funktionen)
-- [Technologien](#technologien)
-- [Sicherheit](#sicherheit)
-- [Entwicklung](#entwicklung)
-- [Beitragen](#beitragen)
-- [Lizenz](#lizenz)
-
----
-
 ## 🏁 Einführung
 Das **Pizza-Kassensystem** ist ein webbasiertes ERP-System, das speziell für Pizzerien entwickelt wurde. Es bietet Funktionen zur Verwaltung von Bestellungen, Kunden, Zahlungen und Statistiken.
 
