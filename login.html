@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Pizza Kassensystem</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <button class="theme-toggle" id="themeToggle" aria-label="Theme Toggle">
+        <span class="icon">🌙</span>
+    </button>
+    <div class="login-container">
+        <h1>Pizza Kassensystem</h1>
+        <form id="loginForm" onsubmit="return handleLogin(event)">
+            <div class="form-group">
+                <label for="username">Benutzername:</label>
+                <input type="text" id="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Passwort:</label>
+                <input type="password" id="password" required>
+            </div>
+            <button type="submit">Anmelden</button>
+        </form>
+        <div id="errorMessage" class="error-message">
+            Ungültige Anmeldedaten. Bitte versuchen Sie es erneut.
+        </div>
+    </div>
+
+    <script>
+        // Beispiel-Anmeldedaten (in der Praxis würde man diese sicher speichern)
+        const validCredentials = [
+            { username: 'admin', password: 'admin123' },
+            { username: 'mitarbeiter', password: 'mitarbeiter123' }
+        ];
+
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+            
+            const isValid = validCredentials.some(cred => 
+                cred.username === username && cred.password === password
+            );
+
+            if (isValid) {
+                // Erfolgreiche Anmeldung
+                sessionStorage.setItem('isLoggedIn', 'true');
+                sessionStorage.setItem('username', username);
+                sessionStorage.setItem('loginTime', new Date().toISOString());
+                window.location.href = 'index.html';
+            } else {
+                // Fehlgeschlagene Anmeldung
+                errorMessage.style.display = 'block';
+                document.getElementById('password').value = '';
+            }
+
+            return false;
+        }
+
+        // Prüfe ob bereits angemeldet
+        if (sessionStorage.getItem('isLoggedIn')) {
+            window.location.href = 'index.html';
+        }
+
+        // Dark Mode Funktionalität
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('.icon');
+        
+        // Lade gespeicherte Theme-Einstellung
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            themeIcon.textContent = '☀️';
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            themeIcon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+        });
+        
+        // System Dark Mode Erkennung
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+        prefersDarkScheme.addEventListener('change', (e) => {
+            if (!localStorage.getItem('theme')) {
+                const newTheme = e.matches ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-theme', newTheme);
+                themeIcon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+            }
+        });
+    </script>
+</body>
+</html>
