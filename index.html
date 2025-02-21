@@ -3756,9 +3756,14 @@ function updateStatisticsDisplay() {
     const dailyRevenue = todayOrders.reduce((sum, order) => sum + order.gesamtbetrag, 0);
     const weeklyRevenue = weekOrders.reduce((sum, order) => sum + order.gesamtbetrag, 0);
     const monthlyRevenue = monthOrders.reduce((sum, order) => sum + order.gesamtbetrag, 0);
-    // Berechne Gesamtumsatz (berücksichtige auch stornierte Bestellungen)
+    // Berechne Gesamtumsatz (berücksichtige stornierte Bestellungen)
     const totalRevenue = orderHistory.reduce((sum, order) => {
-        return sum + (order.storniert ? -order.gesamtbetrag : order.gesamtbetrag);
+        // Ignoriere stornierte Bestellungen komplett
+        if (order.storniert) {
+            return sum;
+        }
+        // Addiere nur nicht-stornierte Bestellungen
+        return sum + order.gesamtbetrag;
     }, 0);
 
     // Aktualisiere UI
@@ -3767,25 +3772,31 @@ function updateStatisticsDisplay() {
     document.getElementById('monthlyRevenue').textContent = formatCurrency(monthlyRevenue);
     document.getElementById('totalRevenue').textContent = formatCurrency(totalRevenue);
 
-    // Berechne Gewinne
+    // Berechne Gewinne unter Berücksichtigung stornierter Bestellungen
     const dailyProfit = todayOrders.reduce((sum, order) => sum + order.gesamtgewinn, 0);
     const weeklyProfit = weekOrders.reduce((sum, order) => sum + order.gesamtgewinn, 0);
     const monthlyProfit = monthOrders.reduce((sum, order) => sum + order.gesamtgewinn, 0);
-    // Berechne Gesamtgewinn (berücksichtige auch stornierte Bestellungen)
+    // Berechne Gesamtgewinn (ignoriere stornierte Bestellungen)
     const totalProfit = orderHistory.reduce((sum, order) => {
-        // Wenn die Bestellung storniert wurde, ziehe den Gewinn ab
-        return sum + (order.storniert ? -order.gesamtgewinn : order.gesamtgewinn);
+        // Ignoriere stornierte Bestellungen komplett
+        if (order.storniert) {
+            return sum;
+        }
+        return sum + order.gesamtgewinn;
     }, 0);
 
-    // Aktualisiere UI
+    // Aktualisiere UI für Profit Overview
     document.getElementById('dailyProfit').textContent = formatCurrency(dailyProfit);
     document.getElementById('weeklyProfit').textContent = formatCurrency(weeklyProfit);
     document.getElementById('monthlyProfit').textContent = formatCurrency(monthlyProfit);
     document.getElementById('totalProfit').textContent = formatCurrency(totalProfit);
 
-    // Berechne Top-Produkte
+    // Berechne Top-Produkte (ignoriere stornierte Bestellungen)
     const productStats = {};
     orderHistory.forEach(order => {
+        // Überspringe stornierte Bestellungen
+        if (order.storniert) return;
+        
         order.bestellungen.forEach(item => {
             if (!productStats[item.pizzaType]) {
                 productStats[item.pizzaType] = 0;
@@ -3803,20 +3814,14 @@ function updateStatisticsDisplay() {
         .map(([product, count]) => `<li>${product}: ${count}x</li>`)
         .join('');
 
-    // Zahlungsstatus
-    const unpaidTotal = orderHistory.reduce((sum, order) => 
-        sum + (!order.bezahlt && !order.storniert ? (order.offenerBetrag || 0) : 0), 0);
-    const totalOrders = orderHistory.filter(order => !order.storniert).length;
-    const paidOrders = orderHistory.filter(order => order.bezahlt && !order.storniert).length;
-
-    document.getElementById('unpaidAmount').textContent = formatCurrency(unpaidTotal);
-    document.getElementById('paidOrders').textContent = `${paidOrders}/${totalOrders}`;
-
-    // Durchschnittswerte - Alle Bestellungen berücksichtigen
-    const avgOrderValue = orderHistory.length > 0 ? 
-        orderHistory.reduce((sum, order) => sum + order.gesamtbetrag, 0) / orderHistory.length : 0;
-    const avgOrderProfit = orderHistory.length > 0 ? 
-        orderHistory.reduce((sum, order) => sum + order.gesamtgewinn, 0) / orderHistory.length : 0;
+    // Berechne Durchschnittswerte (ignoriere stornierte Bestellungen)
+    const validOrders = orderHistory.filter(order => !order.storniert);
+    const avgOrderValue = validOrders.length > 0 
+        ? validOrders.reduce((sum, order) => sum + order.gesamtbetrag, 0) / validOrders.length 
+        : 0;
+    const avgOrderProfit = validOrders.length > 0 
+        ? validOrders.reduce((sum, order) => sum + order.gesamtgewinn, 0) / validOrders.length 
+        : 0;
 
     document.getElementById('avgOrderValue').textContent = formatCurrency(avgOrderValue);
     document.getElementById('avgOrderProfit').textContent = formatCurrency(avgOrderProfit);
