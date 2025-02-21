@@ -3564,34 +3564,24 @@ function createStatisticsSection() {
         <div class="stats-container">
             <div class="stats-row">
                 <div class="stats-card">
-                    <h3>daily revenue</h3>
-                    <div class="stat-value" id="dailyRevenue">0.00€</div>
-                    <div class="stat-change" id="dailyChange">+0%</div>
-                </div>
-                <div class="stats-card">
-                    <h3>weekly revenue</h3>
-                    <div class="stat-value" id="weeklyRevenue">0.00€</div>
-                    <div class="stat-change" id="weeklyChange">+0%</div>
-                </div>
-                <div class="stats-card">
-                    <h3>monthly revenue</h3>
-                    <div class="stat-value" id="monthlyRevenue">0.00€</div>
-                    <div class="stat-change" id="monthlyChange">+0%</div>
-                </div>
-                <!-- OPOS Card -->
-                <div class="stats-card">
-                    <h3>OPOS</h3>
-                    <div class="opos-summary">
-                        <p>Offene Beträge: <span id="totalUnpaidAmount">0.00€</span></p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="stats-row">
-                <div class="stats-card">
-                    <h3 class="top-products-header">🏆 popular products</h3> <!-- Smiley hinzugefügt -->
-                    <div class="top-products" id="topProducts">
-                        <ol></ol>
+                    <h3>revenue overview</h3>
+                    <div class="profit-overview" id="revenueOverview">
+                        <div class="profit-item">
+                            <span>daily revenue:</span>
+                            <span id="dailyRevenue">0.00€</span>
+                        </div>
+                        <div class="profit-item">
+                            <span>weekly revenue:</span>
+                            <span id="weeklyRevenue">0.00€</span>
+                        </div>
+                        <div class="profit-item">
+                            <span>monthly revenue:</span>
+                            <span id="monthlyRevenue">0.00€</span>
+                        </div>
+                        <div class="profit-item">
+                            <span>total revenue:</span>
+                            <span id="totalRevenue">0.00€</span>
+                        </div>
                     </div>
                 </div>
                 <div class="stats-card">
@@ -3609,10 +3599,29 @@ function createStatisticsSection() {
                             <span>monthly profit:</span>
                             <span id="monthlyProfit">0.00€</span>
                         </div>
+                        <div class="profit-item">
+                            <span>total profit:</span>
+                            <span id="totalProfit">0.00€</span>
+                        </div>
                     </div>
                 </div>
             </div>
-
+            
+            <div class="stats-row">
+                <div class="stats-card">
+                    <h3>OPOS</h3>
+                    <div class="opos-summary">
+                        <p>Offene Beträge: <span id="totalUnpaidAmount">0.00€</span></p>
+                    </div>
+                </div>
+                <div class="stats-card">
+                    <h3 class="top-products-header">🏆 popular products</h3>
+                    <div class="top-products" id="topProducts">
+                        <ol></ol>
+                    </div>
+                </div>
+            </div>
+            
             <div class="stats-row">
                 <div class="stats-card">
                     <h3>payment status</h3>
@@ -3652,7 +3661,6 @@ function createStatisticsSection() {
                             <option value="orders">by number of orders</option>
                             <option value="revenue">by total revenue</option>
                             <option value="profit">by profit</option>
-                            <option value="avgOrder">by average order value</option>
                             <option value="lastOrder">by last order</option>
                             <option value="status">by payment status</option>
                         </select>
@@ -3665,7 +3673,6 @@ function createStatisticsSection() {
                                     <th>order</th>
                                     <th>revenue</th>
                                     <th>profit</th>
-                                    <th>avg revenue</th>
                                     <th>last order</th>
                                     <th>Status</th>
                                 </tr>
@@ -3749,20 +3756,32 @@ function updateStatisticsDisplay() {
     const dailyRevenue = todayOrders.reduce((sum, order) => sum + order.gesamtbetrag, 0);
     const weeklyRevenue = weekOrders.reduce((sum, order) => sum + order.gesamtbetrag, 0);
     const monthlyRevenue = monthOrders.reduce((sum, order) => sum + order.gesamtbetrag, 0);
-
-    // Berechne Gewinne
-    const dailyProfit = todayOrders.reduce((sum, order) => sum + order.gesamtgewinn, 0);
-    const weeklyProfit = weekOrders.reduce((sum, order) => sum + order.gesamtgewinn, 0);
-    const monthlyProfit = monthOrders.reduce((sum, order) => sum + order.gesamtgewinn, 0);
+    // Berechne Gesamtumsatz (berücksichtige auch stornierte Bestellungen)
+    const totalRevenue = orderHistory.reduce((sum, order) => {
+        return sum + (order.storniert ? -order.gesamtbetrag : order.gesamtbetrag);
+    }, 0);
 
     // Aktualisiere UI
     document.getElementById('dailyRevenue').textContent = formatCurrency(dailyRevenue);
     document.getElementById('weeklyRevenue').textContent = formatCurrency(weeklyRevenue);
     document.getElementById('monthlyRevenue').textContent = formatCurrency(monthlyRevenue);
+    document.getElementById('totalRevenue').textContent = formatCurrency(totalRevenue);
 
+    // Berechne Gewinne
+    const dailyProfit = todayOrders.reduce((sum, order) => sum + order.gesamtgewinn, 0);
+    const weeklyProfit = weekOrders.reduce((sum, order) => sum + order.gesamtgewinn, 0);
+    const monthlyProfit = monthOrders.reduce((sum, order) => sum + order.gesamtgewinn, 0);
+    // Berechne Gesamtgewinn (berücksichtige auch stornierte Bestellungen)
+    const totalProfit = orderHistory.reduce((sum, order) => {
+        // Wenn die Bestellung storniert wurde, ziehe den Gewinn ab
+        return sum + (order.storniert ? -order.gesamtgewinn : order.gesamtgewinn);
+    }, 0);
+
+    // Aktualisiere UI
     document.getElementById('dailyProfit').textContent = formatCurrency(dailyProfit);
     document.getElementById('weeklyProfit').textContent = formatCurrency(weeklyProfit);
     document.getElementById('monthlyProfit').textContent = formatCurrency(monthlyProfit);
+    document.getElementById('totalProfit').textContent = formatCurrency(totalProfit);
 
     // Berechne Top-Produkte
     const productStats = {};
@@ -3885,15 +3904,9 @@ function updateUserAnalytics() {
                 return b.revenue - a.revenue;
             case 'profit':
                 return b.profit - a.profit;
-            case 'avgOrder':
-                const avgA = a.revenue / a.orders;
-                const avgB = b.revenue / b.orders;
-                return avgB - avgA;
             case 'lastOrder':
                 return b.lastOrder - a.lastOrder;
             case 'status':
-                // Sortiere zuerst nach offenen Zahlungen (höhere zuerst), 
-                // dann nach Gesamtumsatz
                 if (b.unpaidAmount === a.unpaidAmount) {
                     return b.revenue - a.revenue;
                 }
@@ -3910,7 +3923,6 @@ function updateUserAnalytics() {
             <td>${user.orders}</td>
             <td>${formatCurrency(user.revenue)}</td>
             <td>${formatCurrency(user.profit)}</td>
-            <td>${formatCurrency(user.revenue / user.orders)}</td>
             <td>${user.lastOrder.toLocaleDateString('de-DE')}</td>
             <td>
                 ${user.unpaidAmount > 0 
