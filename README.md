@@ -1,4 +1,4 @@
-#🍕 Mini ERP System ######
+🍕 #Mini ERP System ######
 
 Ein intelligentes Kassensystem für Pizzabestellungen mit Funktionen zur Verwaltung von Bestellungen, Rechnungen und Lagerbeständen.
 
