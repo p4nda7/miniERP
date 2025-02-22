@@ -3178,7 +3178,7 @@ document.querySelector('.action-buttons').appendChild(showHistoryButton);
 const resetButton = document.createElement('button');
 resetButton.id = 'resetData';
 resetButton.className = 'danger-button';
-resetButton.innerHTML = '🗑️ Storage zurücksetzen';
+resetButton.innerHTML = '🗑️ reset storage';
 resetButton.addEventListener('click', resetAllData);
 
 // Reset-Button zur Action-Buttons-Section hinzufügen
@@ -3882,10 +3882,14 @@ function createStatisticsSection() {
                             class="sales-search"
                         >
                         <select id="salesSortOption" class="sales-sort">
+                            <option value="product">Nach Produktname</option>
+                            <option value="total_stock">Nach Gesamtbestand</option>
                             <option value="stock">Nach Aktuellem Bestand</option>
                             <option value="quantity">Nach Verkaufsmenge</option>
                             <option value="revenue">Nach Umsatz</option>
                             <option value="profit">Nach Gewinn</option>
+                            <option value="stock_value">Nach Lagerwert</option>
+                            <option value="ab_value">Nach AB-Wert</option>
                         </select>
                     </div>
                     <div class="sales-table-container">
@@ -3893,7 +3897,7 @@ function createStatisticsSection() {
                             <thead>
                                 <tr>
                                     <th>product</th>
-                                    <th>initial stock</th> <!-- Neue Spalte hinzugefügt -->
+                                    <th>total stock</th> <!-- Neue Spalte hinzugefügt -->
                                     <th>current stock</th>
                                     <th>sold</th>
                                     <th>revenue</th>
@@ -4617,16 +4621,22 @@ function updateSalesAnalytics() {
     const sortOption = salesSortOption.value;
     sales.sort((a, b) => {
         switch (sortOption) {
+            case 'product':
+                return a.product.localeCompare(b.product);
+            case 'total_stock':
+                return b.initialStock - a.initialStock;
             case 'stock':
-                const stockA = a.initialStock - a.quantity;
-                const stockB = b.initialStock - b.quantity;
-                return stockA - stockB; // Aufsteigend nach Bestand
+                return a.currentStock - b.currentStock;
             case 'quantity':
                 return b.quantity - a.quantity;
             case 'revenue':
                 return b.revenue - a.revenue;
             case 'profit':
                 return b.profit - a.profit;
+            case 'stock_value':
+                return (b.currentStock * b.purchasePrice) - (a.currentStock * a.purchasePrice);
+            case 'ab_value':
+                return (b.initialStock * b.purchasePrice) - (a.initialStock * a.purchasePrice);
             default:
                 return 0;
         }
