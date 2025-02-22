@@ -10,15 +10,18 @@ Ein intelligentes Kassensystem für Pizzabestellungen mit Funktionen zur Verwalt
 
 💻 Verwendung
 
-🔧 Funktionen
+🛠 Funktionen
 
 🤖 Technologien
 
-📚 Lizenz
+📜 Lizenz
+
+
+
 
 ✨ Überblick
 
-Das Mini ERP System ist ein umfassendes Kassensystem speziell für Pizzabestellungen. Es bietet Funktionen zur Bestellverwaltung, Rechnungsstellung, Verkaufsanalyse und Lagerverwaltung.
+Das Mini ERP System ist ein umfassendes Kassensystem, das speziell für Pizzabestellungen entwickelt wurde. Es bietet Funktionen zur Bestellverwaltung, Rechnungsstellung, Verkaufsanalyse und Lagerverwaltung.
 
 ⚙️ Installation
 
