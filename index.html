@@ -1,0 +1,344 @@
+// Füge die showUserHistory Funktion hinzu
+function showUserHistory(userName) {
+    const userOrders = orderHistory.filter(order => 
+        order.kunde === userName
+    ).sort((a, b) => new Date(b.datum) - new Date(a.datum));
+
+    const historyContainer = document.createElement('div');
+    historyContainer.className = 'history-list';
+    
+    historyContainer.innerHTML = `
+        <h3>Rechnungshistorie: ${userName}</h3>
+        ${userOrders.map(order => {
+            return `
+                <div class="history-item ${order.storniert ? 'storniert' : (order.bezahlt ? 'paid' : 'unpaid')}">
+                    <div class="history-header">
+                        <span>📅 ${new Date(order.datum).toLocaleString('de-DE')}</span>
+                        ${order.storniert ? '<span class="storno-badge">Storniert</span>' : ''}
+                    </div>
+                    <div class="history-details">
+                        <p>Bestellungen:</p>
+                        ${order.bestellungen.map(item => `
+                            <div class="history-order-item">
+                                ${item.quantity}x ${item.pizzaType} - ${formatCurrency(item.total)}
+                            </div>
+                        `).join('')}
+                        <div class="history-totals">
+                            <p>Gesamtbetrag: ${formatCurrency(order.gesamtbetrag)}</p>
+                            <p>Gewinn: ${formatCurrency(order.gesamtgewinn)}</p>
+                        </div>
+                        ${!order.storniert ? `
+                            <div class="payment-status">
+                                <p>Zahlungsstatus: ${order.bezahlt ? 'Bezahlt' : 'Offen'}</p>
+                                ${!order.bezahlt ? `
+                                    <p class="unpaid-amount">Noch offen: ${formatCurrency(order.offenerBetrag || order.gesamtbetrag)}</p>
+                                ` : ''}
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        }).join('')}
+        <button class="secondary-button" onclick="closeUserHistory()">Schließen</button>
+    `;
+
+    // Zeige das Modal
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.appendChild(historyContainer);
+    document.body.appendChild(modal);
+
+    // Füge CSS für das Modal hinzu
+    const style = document.createElement('style');
+    style.textContent = `
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .history-list {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .history-item {
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+// Füge die showSingleInvoice Funktion hinzu
+function showSingleInvoice(bestellungen, kundenName, datum, orderId, storniert) {
+    const invoiceContainer = document.createElement('div');
+    invoiceContainer.className = 'invoice-container';
+    
+    invoiceContainer.innerHTML = `
+        <div class="invoice-content">
+            <div class="invoice-header">
+                <h3>Rechnung #${orderId}</h3>
+                <p>Kunde: ${kundenName}</p>
+                <p>Datum: ${datum.toLocaleString('de-DE')}</p>
+                ${storniert ? '<div class="storno-badge">Storniert</div>' : ''}
+            </div>
+            
+            <div class="invoice-items">
+                <div class="invoice-item header">
+                    <span>Artikel</span>
+                    <span>Menge</span>
+                    <span>Einzelpreis</span>
+                    <span>Gesamt</span>
+                </div>
+                ${bestellungen.map(item => `
+                    <div class="invoice-item">
+                        <span>${item.pizzaType}</span>
+                        <span>${item.quantity}x</span>
+                        <span>${formatCurrency(item.sellingPrice)}</span>
+                        <span>${formatCurrency(item.total)}</span>
+                    </div>
+                `).join('')}
+                
+                <div class="invoice-item total">
+                    <span>Gesamtbetrag:</span>
+                    <span></span>
+                    <span></span>
+                    <span>${formatCurrency(bestellungen.reduce((sum, item) => sum + item.total, 0))}</span>
+                </div>
+            </div>
+            
+            <div class="invoice-footer">
+                <button class="secondary-button" onclick="closeInvoice(this)">
+                    Schließen
+                </button>
+            </div>
+        </div>
+    `;
+
+    // Füge das Modal zum Body hinzu
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.appendChild(invoiceContainer);
+    document.body.appendChild(modal);
+}
+
+// Füge die closeInvoice Funktion hinzu
+function closeInvoice(button) {
+    const modal = button.closest('.modal');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+// Füge zusätzliche Styles für die Rechnung hinzu
+const invoiceStyles = document.createElement('style');
+invoiceStyles.textContent = `
+    .invoice-container {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        max-width: 800px;
+        width: 100%;
+        margin: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .invoice-content {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .invoice-header {
+        border-bottom: 2px solid #eee;
+        padding-bottom: 15px;
+    }
+
+    .invoice-items {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .invoice-item {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 1fr;
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .invoice-item.header {
+        font-weight: bold;
+        background: #f8f9fa;
+    }
+
+    .invoice-item.total {
+        font-weight: bold;
+        border-top: 2px solid #eee;
+        border-bottom: none;
+    }
+
+    .storno-badge {
+        background: #dc3545;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 4px;
+        display: inline-block;
+        margin-top: 10px;
+    }
+`;
+document.head.appendChild(invoiceStyles);
+
+<style>
+    /* Grundlegende Styles für den Container */
+    #orderHistoryContainer {
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+        max-width: 100%;
+        overflow-x: auto;
+    }
+
+    /* Header Styles */
+    #orderHistoryContainer h2 {
+        font-size: 1.5em;
+        margin-bottom: 15px;
+        color: #333;
+    }
+
+    /* Styles für die Bestellliste */
+    .history-list {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    /* Einzelne Bestell-Items */
+    .history-item {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        padding: 15px;
+        transition: background-color 0.3s ease;
+    }
+
+    .history-item:hover {
+        background-color: #f1f1f1;
+    }
+
+    /* Header der Bestell-Items */
+    .history-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .customer-name {
+        font-weight: bold;
+        color: #555;
+    }
+
+    /* Details der Bestell-Items */
+    .history-details {
+        font-size: 0.9em;
+        color: #666;
+    }
+
+    .history-order-item {
+        margin-bottom: 5px;
+    }
+
+    .history-totals {
+        margin-top: 10px;
+        font-weight: bold;
+    }
+
+    /* Storno-Info */
+    .storno-info {
+        background-color: #ffe6e6;
+        padding: 10px;
+        border-radius: 4px;
+        margin-top: 10px;
+        color: #a94442;
+    }
+
+    /* Zahlungseingabebereich */
+    .payment-section {
+        margin-top: 10px;
+    }
+
+    .payment-input-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .payment-input {
+        width: 80px;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    .confirm-payment-button {
+        background-color: #5cb85c;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .confirm-payment-button:hover {
+        background-color: #4cae4c;
+    }
+
+    .cancel-order-btn {
+        background-color: #d9534f;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .cancel-order-btn:hover {
+        background-color: #c9302c;
+    }
+
+    /* Rückkehr-Button */
+    .secondary-button {
+        margin-top: 20px;
+        background-color: #337ab7;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .secondary-button:hover {
+        background-color: #286090;
+    }
+</style> 
