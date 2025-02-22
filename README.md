@@ -16,20 +16,17 @@ Ein intelligentes Kassensystem für Pizzabestellungen mit Funktionen zur Verwalt
 
 📜 Lizenz
 
-
-
-
 ✨ Überblick
 
 Das Mini ERP System ist ein umfassendes Kassensystem, das speziell für Pizzabestellungen entwickelt wurde. Es bietet Funktionen zur Bestellverwaltung, Rechnungsstellung, Verkaufsanalyse und Lagerverwaltung.
 
 ⚙️ Installation
 
-Repository klonen:
+📥 Repository klonen
 
 git clone https://github.com/dein-repo/mini-erp.git
 
-Datei öffnen:
+🔍 Datei öffnen
 
 Öffne index.html in einem Webbrowser.
 
@@ -98,3 +95,26 @@ LocalStorage – Speicherung von Bestell- und Produktdaten im Browser.
 📜 Lizenz
 
 Dieses Projekt ist unter der MIT-Lizenz lizenziert. Weitere Details findest du in der LICENSE Datei.
+
+📖 Unterstützte Formatierungen auf GitHub
+
+GitHub unterstützt verschiedene Markdown-Formatierungen, um die Lesbarkeit zu verbessern:
+
+Fettschrift (**Text** → Text)
+
+Inline-Code (\Text`→Text`)
+
+
+
+Code-Blöcke für Befehle
+(```sh ... ```)
+
+# bis ###### für Überschriften
+
+- für Listenpunkte
+
+Links für Verweise
+
+Emojis 🎉 (z. B. 🍕 oder 🚀) für bessere Lesbarkeit
+
+
