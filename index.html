@@ -2796,7 +2796,15 @@
     </div>
    <script> 
    // Hilfsfunktionen
-const formatCurrency = (amount) => `${amount.toFixed(2)}€`;
+const formatCurrency = (amount) => {
+    // Formatiere die Zahl mit 2 Dezimalstellen und 1000er-Trennung
+    return new Intl.NumberFormat('de-DE', {
+        style: 'currency',
+        currency: 'EUR',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(amount);
+};
 const clearInputFields = (form) => {
     form.querySelectorAll('input, select').forEach(input => input.value = '');
 };
@@ -4140,8 +4148,9 @@ function updateUserAnalytics() {
     const totals = users.reduce((acc, user) => ({
         totalOrders: acc.totalOrders + user.orders,
         totalRevenue: acc.totalRevenue + user.revenue,
-        totalProfit: acc.totalProfit + user.profit
-    }), { totalOrders: 0, totalRevenue: 0, totalProfit: 0 });
+        totalProfit: acc.totalProfit + user.profit,
+        totalUnpaid: acc.totalUnpaid + user.unpaidAmount
+    }), { totalOrders: 0, totalRevenue: 0, totalProfit: 0, totalUnpaid: 0 });
 
     // Füge die Zusammenfassungszeile hinzu
     tbody.innerHTML += `
@@ -4151,7 +4160,7 @@ function updateUserAnalytics() {
             <td>${formatCurrency(totals.totalRevenue)}</td>
             <td>${formatCurrency(totals.totalProfit)}</td>
             <td>-</td>
-            <td>-</td>
+            <td><span class="unpaid-badge">Offen: ${formatCurrency(totals.totalUnpaid)}</span></td>
             <td>-</td>
         </tr>
     `;
