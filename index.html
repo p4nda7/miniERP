@@ -81,7 +81,7 @@
         }
         
         .container {
-            max-width: 885px; /* 700px + 15% + 10% */
+            max-width: 1168px; /* 1062px + 10% */
             margin: auto;
             background: #ffffff;
             padding: 25px;
@@ -3353,12 +3353,20 @@ const showInvoiceHistory = () => {
             <p><strong>Kunde:</strong> ${currentUser}</p>
             <p><strong>Datum:</strong> ${new Date().toLocaleString('de-DE')}</p>
             <p><strong>Betrag:</strong> ${formatCurrency(totalSum)}</p>
-            <button class="show-invoice-btn">Rechnung anzeigen</button>
+            <button 
+                type="button"
+                class="show-invoice-btn"
+                onclick="showSingleInvoice(
+                    ${JSON.stringify(orders)},
+                    '${currentUser}',
+                    new Date(),
+                    null,
+                    false
+                )"
+            >
+                🧾 Rechnung anzeigen
+            </button>
         `;
-
-        currentOrderItem.querySelector('.show-invoice-btn').addEventListener('click', () => {
-            showSingleInvoice(orders, currentUser);
-        });
 
         list.appendChild(currentOrderItem);
     }
@@ -3379,12 +3387,20 @@ const showInvoiceHistory = () => {
                 <p><strong>Kunde:</strong> ${order.kunde}</p>
                 <p><strong>Datum:</strong> ${new Date(order.datum).toLocaleString('de-DE')}</p>
                 <p><strong>Betrag:</strong> ${formatCurrency(order.gesamtbetrag)}</p>
-                <button class="show-invoice-btn">Rechnung anzeigen</button>
+                <button 
+                    type="button"
+                    class="show-invoice-btn"
+                    onclick="showSingleInvoice(
+                        ${JSON.stringify(order.bestellungen).replace(/'/g, "&#39;")},
+                        '${order.kunde.replace(/'/g, "&#39;")}',
+                        new Date('${order.datum}'),
+                        ${order.id},
+                        ${order.storniert}
+                    )"
+                >
+                    🧾 Rechnung anzeigen
+                </button>
             `;
-
-            historyItem.querySelector('.show-invoice-btn').addEventListener('click', () => {
-                showSingleInvoice(order.bestellungen, order.kunde, new Date(order.datum), order.id, order.storniert);
-            });
 
             list.appendChild(historyItem);
         });
@@ -4178,10 +4194,8 @@ function showUserHistory(userName) {
     historyContainer.innerHTML = `
         <h3>Rechnungshistorie: ${userName}</h3>
         ${userOrders.map(order => {
-            // Escape die Bestelldaten korrekt für den onclick-Handler
-            const bestellungenJSON = JSON.stringify(order.bestellungen)
-                .replace(/'/g, "\\'")
-                .replace(/"/g, '\\"');
+            // Sichere Serialisierung der Bestelldaten für den onclick-Handler
+            const safeBestellungen = encodeURIComponent(JSON.stringify(order.bestellungen));
             
             return `
                 <div class="history-item ${order.storniert ? 'storniert' : (order.bezahlt ? 'paid' : 'unpaid')}">
@@ -4209,8 +4223,9 @@ function showUserHistory(userName) {
                             </div>
                         ` : ''}
                         <button 
+                            type="button"
                             class="show-invoice-btn"
-                            onclick="showSingleInvoice(JSON.parse('${bestellungenJSON}'), '${userName}', new Date('${order.datum}'), ${order.id}, ${order.storniert})"
+                            onclick="showSingleInvoice(JSON.parse(decodeURIComponent('${safeBestellungen}')), '${userName}', new Date('${order.datum}'), ${order.id}, ${order.storniert})"
                         >
                             🧾 Rechnung anzeigen
                         </button>
