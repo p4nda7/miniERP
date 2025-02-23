@@ -81,7 +81,7 @@
         }
         
         .container {
-            max-width: 885px; /* 700px + 15% + 10% */
+            max-width: 1265px; /* 1150px + 10% */
             margin: auto;
             background: #ffffff;
             padding: 25px;
@@ -3164,7 +3164,7 @@ closeOrderButton.addEventListener("click", () => {
 const showHistoryButton = document.createElement('button');
 showHistoryButton.id = 'showHistory';
 showHistoryButton.className = 'secondary-button';
-showHistoryButton.innerHTML = '💶 Zahlungsstatus bearbeiten';
+showHistoryButton.innerHTML = '💶 process invoices';
 showHistoryButton.addEventListener('click', () => {
     const historyContainer = document.getElementById('orderHistoryContainer');
     historyContainer.classList.toggle('hidden');
@@ -3702,7 +3702,7 @@ const updatePizzaTypeOptions = () => {
 const adminButton = document.createElement('button');
 adminButton.id = 'showAdmin';
 adminButton.className = 'secondary-button';
-adminButton.innerHTML = '⚙️ Produktpflege';
+adminButton.innerHTML = '⚙️ product management';
 adminButton.addEventListener('click', () => {
     const adminSection = document.getElementById('adminSection');
     adminSection.classList.toggle('hidden');
@@ -3869,7 +3869,8 @@ function createStatisticsSection() {
                                     <th>profit</th>
                                     <th>last order</th>
                                     <th>Status</th>
-                                </tr>
+                                    <th>show invoices</th>
+                                </tr> 
                             </thead>
                             <tbody id="userAnalyticsBody">
                                 <!-- Wird dynamisch befüllt -->
@@ -3905,13 +3906,13 @@ function createStatisticsSection() {
                             <thead>
                                 <tr>
                                     <th>product</th>
-                                    <th>total stock</th> <!-- Neue Spalte hinzugefügt -->
+                                    <th>counter stock</th> <!-- Neue Spalte hinzugefügt -->
                                     <th>current stock</th>
                                     <th>sold</th>
                                     <th>revenue</th>
                                     <th>profit</th>
                                     <th>stock value</th>
-                                    <th>AB Wert</th> <!-- Neue Spalte hinzugefügt -->
+                                    <th>counter value</th> <!-- Neue Spalte hinzugefügt -->
                                 </tr>
                             </thead>
                             <tbody id="salesAnalyticsBody">
