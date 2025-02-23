@@ -2,7 +2,8 @@
 
 Ein intelligentes Kassensystem für Einzelunternehmer, das eine umfassende Verwaltung von Bestellungen, Kunden und Produkten ermöglicht. Dieses System bietet eine benutzerfreundliche Oberfläche zur Verwaltung von Bestellungen, Rechnungen und Produktpreisen sowie eine Visualisierung von betriebswirtschaftlichen Kennzahlen. als On-Premise Anwendung.
 
- ![Screenshot](assets/screenshots/1.jpg)
+![Screenshot](assets/1.jpg)
+
 
 ## 📋 Inhaltsverzeichnis
 
