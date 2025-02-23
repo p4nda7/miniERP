@@ -1,6 +1,6 @@
 # 🍕 Mini ERP System
 
-Ein intelligentes Kassensystem für Pizzabestellungen, das eine umfassende Verwaltung von Bestellungen, Kunden und Produkten ermöglicht. Dieses System bietet eine benutzerfreundliche Oberfläche zur Verwaltung von Bestellungen, Rechnungen und Produktpreisen.
+Ein intelligentes Kassensystem für Einzelunternehmer, das eine umfassende Verwaltung von Bestellungen, Kunden und Produkten ermöglicht. Dieses System bietet eine benutzerfreundliche Oberfläche zur Verwaltung von Bestellungen, Rechnungen und Produktpreisen für die lokale On Premise Anwendung.
 
 ## Inhaltsverzeichnis
 
@@ -25,15 +25,18 @@ Ein intelligentes Kassensystem für Pizzabestellungen, das eine umfassende Verwa
 
 1. **Repository klonen**:
    ```bash
-   git clone https://github.com/IhrBenutzername/mini-erp-system.git
+   git clone https://github.com/p4nda7/miniERP.git
    ```
 
 2. **In das Verzeichnis wechseln**:
    ```bash
-   cd mini-erp-system
+   cd miniERP
    ```
 
 3. **Öffnen Sie die `index.html` in Ihrem bevorzugten Webbrowser**.
+   ```bash
+   open index.html
+   ```
 
 ## Verwendung
 
