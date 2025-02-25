@@ -21,6 +21,7 @@ Ein intelligentes Kassensystem für Einzelunternehmer, das eine umfassende Verwa
 - **🧾 Rechnungsverwaltung**: Anzeigen Rechnungen und offene Positionen.
  ![Screenshot](assets/2.jpg)
 - **📦 Produktmanagement**: Hinzufügen, Bearbeiten und Löschen von Produkten.
+  ![Screenshot](assets/4.jpg)
 - **📦 Lagerverwaltung**: Anzeige von Lagerbeständen mit Warnsystemen.
 - **📊 Statistiken**: Anzeige von Umsatz- und Gewinnstatistiken + Top Products
   ![Screenshot](assets/3.jpg)
