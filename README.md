@@ -20,7 +20,8 @@ Ein intelligentes Kassensystem für Einzelunternehmer, das eine umfassende Verwa
 - **🛒 Bestellverwaltung**: Erstellen, Bearbeiten und Löschen von Bestellungen.
 - **🧾 Rechnungsverwaltung**: Anzeigen und Drucken von Rechnungen.
 - **📦 Produktmanagement**: Hinzufügen, Bearbeiten und Löschen von Produkten.
-- **📊 Statistiken**: Anzeige von Umsatz- und Gewinnstatistiken.
+- **📦 Lagerverwaltung**: Anzeige von Lagerbeständen mit Warnsystemen.
+- **📊 Statistiken**: Anzeige von Umsatz- und Gewinnstatistiken + Top Products
 - **🔍 Suchfunktion**: Suchen nach Kunden und Bestellungen.
 - **📱 Responsive Design**: Optimiert für verschiedene Bildschirmgrößen.
 
