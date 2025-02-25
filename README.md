@@ -1,6 +1,6 @@
 # 🍕 Mini ERP System
 
-Ein intelligentes Kassensystem für Einzelunternehmer, das eine umfassende Verwaltung von Bestellungen, Kunden und Produkten ermöglicht. Dieses System bietet eine benutzerfreundliche Oberfläche zur Verwaltung von Bestellungen, Rechnungen und Produktpreisen sowie eine Visualisierung von betriebswirtschaftlichen Kennzahlen. als On-Premise Anwendung.
+Ein intelligentes Kassensystem für Einzelunternehmer, das eine umfassende Verwaltung von Bestellungen, Kunden und Produkten ermöglicht. Dieses System bietet eine benutzerfreundliche Oberfläche zur Verwaltung von Bestellungen, Rechnungen und Produktpreisen sowie eine Visualisierung von betriebswirtschaftlichen Kennzahlen als On-Premise Anwendung.
 
 ![Screenshot](assets/1.jpg)
 
